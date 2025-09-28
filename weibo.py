@@ -67,20 +67,29 @@ ids = []
 page = 1
 
 while True:
-    res = w.get_blog(page=page)
+    res = w.get_blog(page)
 
     data = res.get("data", {})
     weibos = data.get("list", [])
     since_id = data.get("since_id")
 
+    r = []
+    for i in weibos:
+        r.append(
+            {
+                "id": i["idstr"],
+                "visible": i["visible"]["type"],
+                "text": i["text_raw"],
+            }
+        )
+    ids.extend(r)
+
     if since_id:
-        ids.extend([{"id": i["idstr"], "visible": i["visible"]["type"]} for i in weibos])
         print(f"第 {page} 页获取完成, since_id={since_id}")
         page += 1
     else:
         # 最后一页
-        ids.extend([{"id": i["idstr"], "visible": i["visible"]["type"]} for i in weibos])
-        print(f"第 {page} 页获取完成, since_id={since_id}")
+        print(f"第 {page} 页获取完成")
         break
 
 print(f"共获取到 {len(ids)} 条微博")
@@ -89,4 +98,4 @@ for i in trange(len(ids), desc="修改中"):
     res = w.modify_visible(ids[i], 1)
 
     if res.get("ok") != 1:
-        print(f"{i} 修改失败，原因：{res.get('message')}")
+        print(f"{ids[i]['id']}({ids[i]['text']}) 修改失败，原因：{res.get('message')}")
