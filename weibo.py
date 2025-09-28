@@ -79,6 +79,7 @@ while True:
     else:
         # 最后一页
         ids.extend([{"id": i["idstr"], "visible": i["visible"]["type"]} for i in weibos])
+        print(f"第 {page} 页获取完成, since_id={since_id}")
         break
 
 print(f"共获取到 {len(ids)} 条微博")
