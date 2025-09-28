@@ -48,6 +48,7 @@ class Weibo:
 
         data = {"ids": post_id["id"], "visible": visible}
         response = requests.post(url, headers=self.headers, json=data)
+        time.sleep(1)
         return response.json()
 
     def get_blog(self, page=1):
@@ -89,4 +90,3 @@ for i in trange(len(ids), desc="修改中"):
 
     if res.get("ok") != 1:
         print(f"{i} 修改失败，原因：{res.get('message')}")
-    time.sleep(1)
